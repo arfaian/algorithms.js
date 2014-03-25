@@ -60,11 +60,11 @@ var drawChart = function(element, data) {
   var outerY = y(0);
 
   var outer = svg.append('path')
-      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l 8 8 l -16 0 z'; })
+      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l  6 6 l -12 0 z'; })
       .attr('fill', 'green');
 
   var inner = svg.append('path')
-      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + y(0) + ' l 8 8 l -16 0 z'; })
+      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + y(0) + ' l -12 0 l 6 6 z'; })
       .attr('fill', 'red');
 
   updateOuter = function(i) {
