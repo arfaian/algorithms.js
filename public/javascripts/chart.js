@@ -60,20 +60,71 @@ var drawChart = function(element, data) {
   var outerY = y(0);
 
   var outer = svg.append('path')
-      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l  6 6 l -12 0 z'; })
-      .attr('fill', 'green');
+      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l 8 8 l -16 0 z'; })
+      .attr('fill', '#2C3E50');
 
   var inner = svg.append('path')
-      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + y(0) + ' l -12 0 l 6 6 z'; })
-      .attr('fill', 'red');
+      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l -16 0 l 8 8 z'; })
+      .attr('fill', '#E74C3C');
 
   updateOuter = function(i) {
-    outer.attr('d', function(d) { return 'M ' + xModifier(i) + ' ' + outerY + ' l 6 6 l -12 0 z'; })
+    outer.attr('d', function(d) { return 'M ' + xModifier(i) + ' ' + outerY + ' l 8 8 l -16 0 z'; })
   }
+
   updateInner = function(i, value) {
-    var yPosition = y(value) - 6;
-    var xPosition = xModifier(i) + halfRangeBand;
-    inner.attr('d', function(d) { return 'M ' + xPosition + ' ' + yPosition + ' l -12 0 l 6 6 z'; })
+    var yPosition = y(value) - 8;
+    var xPosition = xModifier(i) + 8;
+    inner.attr('d', function(d) { return 'M ' + xPosition + ' ' + yPosition + ' l -16 0 l 8 8 z'; })
   }
+
+  swapBars = function(i, min) {
+    var $i = d3.select('#bar' + i);
+    var ix = $i.attr('x');
+    var iy = $i.attr('y');
+    var iid = $i.attr('id');
+    var iheight = $i.attr('height');
+    var iwidth = $i.attr('width');
+
+    var $min = d3.select('#bar' + min);
+    var minx = $min.attr('x');
+    var miny = $min.attr('y');
+    var minid = $min.attr('id');
+    var minheight = $min.attr('height');
+
+    $min.remove();
+    $i.remove();
+
+    d3.select('.bars').append('rect')
+      .attr('class', 'bar')
+      .attr('x', minx)
+      .attr('width', iwidth)
+      .attr('y', iy)
+      .attr('height', iheight)
+      .attr('id', minid);
+
+    d3.select('.bars').append('rect')
+      .attr('class', 'bar')
+      .attr('x', ix)
+      .attr('width', iwidth)
+      .attr('y', miny)
+      .attr('height', minheight)
+      .attr('id', iid);
+  }
+
+  currentMin = (function() {
+    var min = null;
+
+    var toggle = function(bool) {
+      min.classed('min', bool);
+    }
+
+    return function(i) {
+      if (min !== null) {
+        toggle(false);
+      }
+      min = d3.select('#bar' + i);
+      toggle(true);
+    }
+  })();
 }
 

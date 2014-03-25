@@ -1,7 +1,7 @@
-var arr = [], n = 50;
+var arr = [], n = 20;
 
 for (var i = 0; i < n; i++) {
-  arr[i] = i;
+  arr[i] = i + 1;
 }
 
 function shuffle(array) {

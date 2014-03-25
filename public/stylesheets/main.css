@@ -1,9 +1,15 @@
 body {
-  margin-top: 20px
+  margin-top: 20px;
+  font: 400 14px/1.6 "Open Sans", sans-serif;
+}
+
+h1 {
+  font: 100 36px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-bottom: 20px;
 }
 
 .bar {
-  fill: steelblue;
+  fill: #3498DB;
 }
 
 .axis {
@@ -26,3 +32,6 @@ body {
   width: 800px
 }
 
+.min {
+  fill: #E74C3C;
+}
