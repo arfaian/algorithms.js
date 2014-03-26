@@ -10,13 +10,18 @@ var insertionSort = function(chart) {
     }
 
     function inner(i, j) {
+      if (shim.exit) {
+        return;
+      }
+
       if (j > 0 && shim.less(j, j - 1)) {
         shim.exch(j, j - 1);
         chart.updateInner(j - 1, arr[j - 1]);
         chart.currentMin(j - 1);
-        shim.exitWrapper(function() { inner(i, --j); }, 80);
+        setTimeout(function() { inner(i, --j); }, 80);
       } else {
-        shim.exitWrapper(function() { outer(++i); }, 100);
+        chart.updateInner(j, arr[j]);
+        setTimeout(function() { outer(++i); }, 100);
       }
     }
 

@@ -132,6 +132,10 @@ function Chart(element, data) {
       min = d3.select('#bar' + i);
       toggle(true);
     }
-  })()
+  })();
+
+  this.removeMin = function() {
+    d3.selectAll('.bar').classed('min', false);
+  }
 }
 
