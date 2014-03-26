@@ -1,7 +1,7 @@
-var arr = [], n = 20;
+var originalArray = [], n = 20;
 
 for (var i = 0; i < n; i++) {
-  arr[i] = i + 1;
+  originalArray[i] = i + 1;
 }
 
 function shuffle(array) {
@@ -24,7 +24,5 @@ function shuffle(array) {
   return copy;
 }
 
-arr = shuffle(arr);
-
-drawChart('#chart', arr);
+originalArray = shuffle(originalArray);
 

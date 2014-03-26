@@ -1,4 +1,4 @@
-var drawChart = function(element, data) {
+function Chart(element, data) {
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
       width = 800 - margin.left - margin.right,
       height = 300 - margin.top - margin.bottom;
@@ -17,6 +17,8 @@ var drawChart = function(element, data) {
       .scale(y)
       .orient("left")
       .ticks(10);
+
+  d3.select(element + " > svg").remove();
 
   var svg = d3.select(element).append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -59,59 +61,64 @@ var drawChart = function(element, data) {
   var xModifier = function(i) { return x(i) + halfRangeBand; };
   var outerY = y(0);
 
+  var yPosition = function(value) { return y(value) - 8; };
+  var xPosition = function(i) { return xModifier(i) + 8; };
+
   var outer = svg.append('path')
       .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l 8 8 l -16 0 z'; })
       .attr('fill', '#2C3E50');
 
   var inner = svg.append('path')
-      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l -16 0 l 8 8 z'; })
+      .attr('d', function(d) { return 'M ' + xPosition(0) + ' ' + yPosition(d3.select('#bar' + 0).attr('height')) + ' l -16 0 l 8 8 z'; })
       .attr('fill', '#E74C3C');
 
-  updateOuter = function(i) {
+  this.array = data;
+
+  this.updateOuter = function(i) {
     outer.attr('d', function(d) { return 'M ' + xModifier(i) + ' ' + outerY + ' l 8 8 l -16 0 z'; })
   }
 
-  updateInner = function(i, value) {
-    var yPosition = y(value) - 8;
-    var xPosition = xModifier(i) + 8;
-    inner.attr('d', function(d) { return 'M ' + xPosition + ' ' + yPosition + ' l -16 0 l 8 8 z'; })
+  this.updateInner = function(i, value) {
+    inner.attr('d', function(d) { return 'M ' + xPosition(i) + ' ' + yPosition(value) + ' l -16 0 l 8 8 z'; })
   }
 
-  swapBars = function(i, min) {
-    var $i = d3.select('#bar' + i);
-    var ix = $i.attr('x');
-    var iy = $i.attr('y');
-    var iid = $i.attr('id');
-    var iheight = $i.attr('height');
-    var iwidth = $i.attr('width');
+  this.exchBars = function(i, min) {
+    if (i !== min) {
+      var $i = d3.select('#bar' + i);
+      var ix = $i.attr('x');
+      var iy = $i.attr('y');
+      var iid = $i.attr('id');
+      var iheight = $i.attr('height');
+      var iwidth = $i.attr('width');
 
-    var $min = d3.select('#bar' + min);
-    var minx = $min.attr('x');
-    var miny = $min.attr('y');
-    var minid = $min.attr('id');
-    var minheight = $min.attr('height');
+      var $min = d3.select('#bar' + min);
+      var minx = $min.attr('x');
+      var miny = $min.attr('y');
+      var minid = $min.attr('id');
+      var minheight = $min.attr('height');
 
-    $min.remove();
-    $i.remove();
+      $min.remove();
+      $i.remove();
 
-    d3.select('.bars').append('rect')
-      .attr('class', 'bar')
-      .attr('x', minx)
-      .attr('width', iwidth)
-      .attr('y', iy)
-      .attr('height', iheight)
-      .attr('id', minid);
+      d3.select('.bars').append('rect')
+        .attr('class', 'bar')
+        .attr('x', minx)
+        .attr('width', iwidth)
+        .attr('y', iy)
+        .attr('height', iheight)
+        .attr('id', minid);
 
-    d3.select('.bars').append('rect')
-      .attr('class', 'bar')
-      .attr('x', ix)
-      .attr('width', iwidth)
-      .attr('y', miny)
-      .attr('height', minheight)
-      .attr('id', iid);
+      d3.select('.bars').append('rect')
+        .attr('class', 'bar')
+        .attr('x', ix)
+        .attr('width', iwidth)
+        .attr('y', miny)
+        .attr('height', minheight)
+        .attr('id', iid);
+    }
   }
 
-  currentMin = (function() {
+  this.currentMin = (function() {
     var min = null;
 
     var toggle = function(bool) {
@@ -125,6 +132,6 @@ var drawChart = function(element, data) {
       min = d3.select('#bar' + i);
       toggle(true);
     }
-  })();
+  })()
 }
 
