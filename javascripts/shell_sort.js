@@ -25,7 +25,7 @@ var shellSort = function(chart) {
       if (i < n) {
         setTimeout(function() {
           inner2(h, i, i);
-        }, 100);
+        }, 80);
       } else {
         outer(Math.floor(h / 3));
       }
@@ -41,7 +41,7 @@ var shellSort = function(chart) {
           inner2(h, i, j - h);
         }, 80);
       } else {
-        setTimeout(function() { inner(h, ++i); });
+        setTimeout(function() { inner(h, ++i); }, 0);
       }
     }
 
