@@ -10,19 +10,23 @@
     anchor.parent().toggleClass('active');
   }
 
-  $(document).on('click', '#selection-sort', function(event) {
-    event && event.preventDefault && event.preventDefault();
-    prepPage('selection sort', $(this));
-    runningAlgorithm = selectionSort(new Chart('#chart', originalArray.slice(0)));
-    runningAlgorithm.go();
-  });
+  var sorts = [
+    { id: '#selection-sort', name: 'selection sort', fn: selectionSort },
+    { id: '#insertion-sort', name: 'insertion sort', fn: insertionSort },
+    { id: '#shell-sort', name: 'shell sort', fn: shellSort }
+  ];
 
-  $(document).on('click', '#insertion-sort', function(event) {
-    event && event.preventDefault && event.preventDefault();
-    prepPage('insertion sort', $(this));
-    runningAlgorithm = insertionSort(new Chart('#chart', originalArray.slice(0)));
-    runningAlgorithm.go();
-  });
+  for (var i = 0; i < sorts.length; i++) {
+    var sort = sorts[i];
+    (function(id, name, fn) {
+      $(document).on('click', id, function(event) {
+        event && event.preventDefault && event.preventDefault();
+        prepPage(name, $(this));
+        runningAlgorithm = fn(new Chart('#chart', originalArray.slice(0)));
+        runningAlgorithm.go();
+      });
+    })(sort.id, sort.name, sort.fn)
+  }
 
   $('#selection-sort').trigger('click');
 })();

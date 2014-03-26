@@ -1,10 +1,12 @@
 var insertionSort = function(chart) {
-  var arr = chart.array;
-  return new SortShim(chart, arr, function(shim) {
+  return new SortShim(chart, function(shim) {
+    var innerPointer = chart.createHeightPointer();
+    var outerPointer = chart.createBasePointer();
+
     function outer(i) {
       if (i < n) {
-        chart.updateOuter(i);
-        chart.currentMin(i);
+        outerPointer.update(i);
+        chart.setActive(i);
         inner(i, i);
       }
     }
@@ -16,11 +18,11 @@ var insertionSort = function(chart) {
 
       if (j > 0 && shim.less(j, j - 1)) {
         shim.exch(j, j - 1);
-        chart.updateInner(j - 1, arr[j - 1]);
-        chart.currentMin(j - 1);
+        innerPointer.update(j - 1);
+        chart.setActive(j - 1);
         setTimeout(function() { inner(i, --j); }, 80);
       } else {
-        chart.updateInner(j, arr[j]);
+        innerPointer.update(j);
         setTimeout(function() { outer(++i); }, 100);
       }
     }

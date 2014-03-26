@@ -1,11 +1,13 @@
 var selectionSort = function(chart) {
-  var arr = chart.array;
-  return new SortShim(chart, arr, function(shim) {
+  return new SortShim(chart, function(shim) {
+    var innerPointer = chart.createHeightPointer();
+    var outerPointer = chart.createBasePointer();
+
     function outer(i) {
       if (i < n - 1) {
-        chart.updateOuter(i);
+        outerPointer.update(i);
         var min = i;
-        chart.currentMin(min);
+        chart.setActive(min);
         inner(min, i, i + 1);
       }
     }
@@ -16,15 +18,15 @@ var selectionSort = function(chart) {
       }
 
       if (j < n) {
-        chart.updateInner(j, arr[j]);
+        innerPointer.update(j);
         if (shim.less(j, min)) {
           min = j;
-          chart.currentMin(min);
+          chart.setActive(min);
         }
         setTimeout(function() { inner(min, i, ++j); }, 80);
       } else {
         shim.exch(i, min);
-        chart.updateInner(j - 1, arr[j - 1]);
+        innerPointer.update(j - 1);
         setTimeout(function() { outer(++i); }, 100);
       }
     }

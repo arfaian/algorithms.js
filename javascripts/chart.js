@@ -1,4 +1,6 @@
 function Chart(element, data) {
+  this.array = data;
+
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
       width = 800 - margin.left - margin.right,
       height = 300 - margin.top - margin.bottom;
@@ -64,22 +66,21 @@ function Chart(element, data) {
   var yPosition = function(value) { return y(value) - 8; };
   var xPosition = function(i) { return xModifier(i) + 8; };
 
-  var outer = svg.append('path')
-      .attr('d', function(d) { return 'M ' + xModifier(0) + ' ' + outerY + ' l 8 8 l -16 0 z'; })
-      .attr('fill', '#2C3E50');
-
-  var inner = svg.append('path')
-      .attr('d', function(d) { return 'M ' + xPosition(0) + ' ' + yPosition(d3.select('#bar' + 0).attr('height')) + ' l -16 0 l 8 8 z'; })
-      .attr('fill', '#E74C3C');
-
-  this.array = data;
-
-  this.updateOuter = function(i) {
-    outer.attr('d', function(d) { return 'M ' + xModifier(i) + ' ' + outerY + ' l 8 8 l -16 0 z'; })
+  function Pointer(color, paths) {
+    var pointer = svg.append('path')
+        .attr('d', paths(0))
+        .attr('fill', color);
+    this.update = function(i) {
+      pointer.attr('d', paths(i));
+    }
   }
 
-  this.updateInner = function(i, value) {
-    inner.attr('d', function(d) { return 'M ' + xPosition(i) + ' ' + yPosition(value) + ' l -16 0 l 8 8 z'; })
+  this.createHeightPointer = function() {
+    return new Pointer('#E74C3C', function(i) { return 'M ' + xPosition(i) + ' ' + yPosition(data[i]) + ' l -16 0 l 8 8 z'; });
+  }
+
+  this.createBasePointer = function() {
+    return new Pointer('#2C3E50', function(i) { return 'M ' + xModifier(i) + ' ' + outerY + ' l 8 8 l -16 0 z'; });
   }
 
   this.exchBars = function(i, min) {
@@ -118,24 +119,10 @@ function Chart(element, data) {
     }
   }
 
-  this.currentMin = (function() {
-    var min = null;
-
-    var toggle = function(bool) {
-      min.classed('min', bool);
-    }
-
-    return function(i) {
-      if (min !== null) {
-        toggle(false);
-      }
-      min = d3.select('#bar' + i);
-      toggle(true);
-    }
-  })();
-
-  this.removeMin = function() {
+  this.setActive = function(i) {
     d3.selectAll('.bar').classed('min', false);
+    d3.select('#bar' + i).classed('min', true);
   }
+
 }
 

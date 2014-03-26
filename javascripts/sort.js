@@ -1,5 +1,6 @@
-var SortShim = function(chart, arr, callback) {
+var SortShim = function(chart, callback) {
   var self = this;
+  var arr = chart.array;
 
   this.less = function(v, w) {
     return arr[v] < arr[w];
@@ -10,7 +11,6 @@ var SortShim = function(chart, arr, callback) {
     arr[i] = arr[j];
     arr[j] = t;
     chart.exchBars(i, j);
-    chart.removeMin();
   }
 
   this.exit = false;
